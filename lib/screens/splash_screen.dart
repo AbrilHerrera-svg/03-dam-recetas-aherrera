@@ -12,7 +12,7 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   @override
-  void initState() {
+  void initState() { //Herrera Dominguez Abril Andrea
     super.initState();
     Timer(const Duration(milliseconds: 2200), () {
       Navigator.pushReplacement(
