@@ -17,7 +17,6 @@ class _DetalleRecetaScreenState extends State<DetalleRecetaScreen> {
   List<Resena> _resenas = [];
   final TextEditingController _autorController = TextEditingController();
   final TextEditingController _comentarioController = TextEditingController();
-  int _calificacionSeleccionada = 0;
 
   @override
   void initState() {
@@ -43,10 +42,10 @@ class _DetalleRecetaScreenState extends State<DetalleRecetaScreen> {
     final autor = _autorController.text.trim();
     final comentario = _comentarioController.text.trim();
 
-    if (autor.isEmpty || comentario.isEmpty || _calificacionSeleccionada == 0) {
+    if (autor.isEmpty || comentario.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text("Completa tu nombre, comentario y calificación"),
+          content: Text("Completa tu nombre y comentario"),
         ),
       );
       return;
@@ -58,17 +57,13 @@ class _DetalleRecetaScreenState extends State<DetalleRecetaScreen> {
         recetaId: widget.receta.id,
         autor: autor,
         comentario: comentario,
-        calificacion: _calificacionSeleccionada,
         fecha: DateTime.now(),
       ),
     );
 
     if (!mounted) return;
-    setState(() {
-      _autorController.clear();
-      _comentarioController.clear();
-      _calificacionSeleccionada = 0;
-    });
+    _autorController.clear();
+    _comentarioController.clear();
     FocusScope.of(context).unfocus();
 
     await _cargarResenas();
@@ -83,25 +78,6 @@ class _DetalleRecetaScreenState extends State<DetalleRecetaScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              "Tu calificación:",
-              style: TextStyle(fontWeight: FontWeight.w600),
-            ),
-            Row(
-              children: List.generate(
-                5,
-                (indice) => IconButton(
-                  onPressed: () =>
-                      setState(() => _calificacionSeleccionada = indice + 1),
-                  icon: Icon(
-                    indice < _calificacionSeleccionada
-                        ? Icons.star
-                        : Icons.star_border,
-                    color: Colors.orange,
-                  ),
-                ),
-              ),
-            ),
             TextField(
               controller: _autorController,
               textCapitalization: TextCapitalization.words,

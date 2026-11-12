@@ -3,7 +3,6 @@ class Resena {
   final int recetaId;
   final String autor;
   final String comentario;
-  final int calificacion;
   final DateTime fecha;
 
   const Resena({
@@ -11,7 +10,6 @@ class Resena {
     required this.recetaId,
     required this.autor,
     required this.comentario,
-    required this.calificacion,
     required this.fecha,
   });
 
@@ -22,7 +20,6 @@ class Resena {
       'recetaId': recetaId,
       'autor': autor,
       'comentario': comentario,
-      'calificacion': calificacion,
       'fecha': fecha.toIso8601String(),
     };
   }
@@ -34,7 +31,6 @@ class Resena {
       recetaId: mapa['recetaId'],
       autor: mapa['autor'],
       comentario: mapa['comentario'],
-      calificacion: mapa['calificacion'],
       fecha: DateTime.parse(mapa['fecha']),
     ); // Resena
   }

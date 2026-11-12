@@ -46,17 +46,6 @@ class ResenaTile extends StatelessWidget {
               ],
             ), // Row
             const SizedBox(height: 6),
-            Row(
-              children: List.generate(
-                5,
-                (indice) => Icon(
-                  indice < resena.calificacion ? Icons.star : Icons.star_border,
-                  size: 16,
-                  color: Colors.orange,
-                ), // Icon
-              ),
-            ), // Row
-            const SizedBox(height: 6),
             Text(resena.comentario),
           ],
         ), // Column

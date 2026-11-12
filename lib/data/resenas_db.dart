@@ -20,20 +20,28 @@ class ResenasDb {
     final ruta = join(await getDatabasesPath(), _nombreArchivo);
     return openDatabase(
       ruta,
-      version: 1,
+      version: 2,
       onCreate: (db, version) async {
-        await db.execute('''
+        await _crearTabla(db);
+      },
+      // v2: se quitó la columna calificacion, se recrea la tabla
+      onUpgrade: (db, versionAnterior, versionNueva) async {
+        await db.execute('DROP TABLE IF EXISTS $_tabla');
+        await _crearTabla(db);
+      },
+    );
+  }
+
+  Future<void> _crearTabla(Database db) async {
+    await db.execute('''
 CREATE TABLE $_tabla (
 id INTEGER PRIMARY KEY AUTOINCREMENT,
 recetaId INTEGER NOT NULL,
 autor TEXT NOT NULL,
 comentario TEXT NOT NULL,
-calificacion INTEGER NOT NULL,
 fecha TEXT NOT NULL
 )
 ''');
-      },
-    );
   }
 
   // guarda y devuelve el id
