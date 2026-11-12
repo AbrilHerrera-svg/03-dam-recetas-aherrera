@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:recetas_app/data/resenas_db.dart';
 import 'package:recetas_app/models/receta.dart';
 import 'package:recetas_app/models/resena.dart';
 import 'package:recetas_app/widgets/resena_tile.dart';
@@ -13,19 +14,32 @@ class DetalleRecetaScreen extends StatefulWidget {
 }
 
 class _DetalleRecetaScreenState extends State<DetalleRecetaScreen> {
-  final List<Resena> _resenas = [];
+  List<Resena> _resenas = [];
   final TextEditingController _autorController = TextEditingController();
   final TextEditingController _comentarioController = TextEditingController();
   int _calificacionSeleccionada = 0;
 
   @override
-  void dispose() {
+  void initState() {
+    super.initState();
+    _cargarResenas();
+  }
+
+  // lee de la bd las reseñas de esta receta
+  Future<void> _cargarResenas() async {
+    final resenas = await ResenasDb.instancia.obtenerPorReceta(widget.receta.id);
+    if (!mounted) return;
+    setState(() => _resenas = resenas);
+  }
+
+  @override //Abril Andrea Herrera Dominguez
+  void dispose() { 
     _autorController.dispose();
     _comentarioController.dispose();
     super.dispose();
   }
 
-  void _agregarResena() {
+  Future<void> _agregarResena() async {
     final autor = _autorController.text.trim();
     final comentario = _comentarioController.text.trim();
 
@@ -38,22 +52,26 @@ class _DetalleRecetaScreenState extends State<DetalleRecetaScreen> {
       return;
     }
 
+    // guarda la reseña en la bd
+    await ResenasDb.instancia.insert(
+      Resena(
+        recetaId: widget.receta.id,
+        autor: autor,
+        comentario: comentario,
+        calificacion: _calificacionSeleccionada,
+        fecha: DateTime.now(),
+      ),
+    );
+
+    if (!mounted) return;
     setState(() {
-      _resenas.insert(
-        0,
-        Resena(
-          autor: autor,
-          comentario: comentario,
-          calificacion: _calificacionSeleccionada,
-          fecha: DateTime.now(),
-        ),
-      );
       _autorController.clear();
       _comentarioController.clear();
       _calificacionSeleccionada = 0;
     });
-
     FocusScope.of(context).unfocus();
+
+    await _cargarResenas();
   }
 
   Widget _construirFormularioResena() {
