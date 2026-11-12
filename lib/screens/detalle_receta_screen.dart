@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:recetas_app/models/receta.dart';
+import 'package:recetas_app/models/resena.dart';
+import 'package:recetas_app/widgets/resena_tile.dart';
 
 class DetalleRecetaScreen extends StatefulWidget {
   final Receta receta;
@@ -11,6 +13,116 @@ class DetalleRecetaScreen extends StatefulWidget {
 }
 
 class _DetalleRecetaScreenState extends State<DetalleRecetaScreen> {
+  final List<Resena> _resenas = [];
+  final TextEditingController _autorController = TextEditingController();
+  final TextEditingController _comentarioController = TextEditingController();
+  int _calificacionSeleccionada = 0;
+
+  @override
+  void dispose() {
+    _autorController.dispose();
+    _comentarioController.dispose();
+    super.dispose();
+  }
+
+  void _agregarResena() {
+    final autor = _autorController.text.trim();
+    final comentario = _comentarioController.text.trim();
+
+    if (autor.isEmpty || comentario.isEmpty || _calificacionSeleccionada == 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Completa tu nombre, comentario y calificación"),
+        ),
+      );
+      return;
+    }
+
+    setState(() {
+      _resenas.insert(
+        0,
+        Resena(
+          autor: autor,
+          comentario: comentario,
+          calificacion: _calificacionSeleccionada,
+          fecha: DateTime.now(),
+        ),
+      );
+      _autorController.clear();
+      _comentarioController.clear();
+      _calificacionSeleccionada = 0;
+    });
+
+    FocusScope.of(context).unfocus();
+  }
+
+  Widget _construirFormularioResena() {
+    return Card(
+      elevation: 1,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              "Tu calificación:",
+              style: TextStyle(fontWeight: FontWeight.w600),
+            ),
+            Row(
+              children: List.generate(
+                5,
+                (indice) => IconButton(
+                  onPressed: () =>
+                      setState(() => _calificacionSeleccionada = indice + 1),
+                  icon: Icon(
+                    indice < _calificacionSeleccionada
+                        ? Icons.star
+                        : Icons.star_border,
+                    color: Colors.orange,
+                  ),
+                ),
+              ),
+            ),
+            TextField(
+              controller: _autorController,
+              textCapitalization: TextCapitalization.words,
+              decoration: const InputDecoration(
+                labelText: "Tu nombre",
+                border: OutlineInputBorder(),
+                isDense: true,
+              ),
+            ),
+            const SizedBox(height: 10),
+            TextField(
+              controller: _comentarioController,
+              maxLines: 3,
+              textCapitalization: TextCapitalization.sentences,
+              decoration: const InputDecoration(
+                labelText: "Escribe tu reseña",
+                border: OutlineInputBorder(),
+                isDense: true,
+              ),
+            ),
+            const SizedBox(height: 10),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: _agregarResena,
+                icon: const Icon(Icons.send),
+                label: const Text("Publicar reseña"),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.deepOrange,
+                  foregroundColor: Colors.white,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final receta = widget.receta;
@@ -78,7 +190,26 @@ class _DetalleRecetaScreenState extends State<DetalleRecetaScreen> {
                 Expanded(child: Text(entrada.value))
               ],
             ),)
-          )
+          ),
+          const SizedBox(height: 20),
+          Text(
+            "Reseñas (${_resenas.length}): ",
+            style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 8),
+          _construirFormularioResena(),
+          const SizedBox(height: 8),
+          if (_resenas.isEmpty)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              child: Text(
+                "Aún no hay reseñas. ¡Sé el primero en opinar!",
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.grey.shade600),
+              ),
+            )
+          else
+            ..._resenas.map((resena) => ResenaTile(resena: resena)),
         ],
       ),
     );
