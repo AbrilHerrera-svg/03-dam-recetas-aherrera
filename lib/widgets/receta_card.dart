@@ -32,9 +32,9 @@ class RecetaCard extends StatelessWidget {
                     width: 72,
                     height: 72,
                     fit: BoxFit.cover,
-                  ), // Image.asset
-                ), // Image.network
-              ), // ClipRRect
+                  ), 
+                ), 
+              ), 
               const SizedBox(width: 12),
               Expanded(
                 child: Column(
@@ -45,25 +45,25 @@ class RecetaCard extends StatelessWidget {
                       style: const TextStyle(
                         fontSize: 14.5,
                         fontWeight: FontWeight.bold,
-                      ), // TextStyle
+                      ), 
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                    ), // Text
+                    ), 
                     const SizedBox(height: 4),
                     Text(
                       '${receta.cocina} · ${receta.dificultad} · ${receta.tiempoTotal} min',
                       style: TextStyle(
                         fontSize: 11.5,
                         color: Colors.grey.shade600,
-                      ), // TextStyle
-                    ), // Text
+                      ), 
+                    ), 
                   ],
-                ), // Column
-              ), // Expanded
+                ), 
+              ), 
             ],
-          ), // Row
-        ), // Padding
-      ), // InkWell
-    ); // Card
+          ),
+        ), 
+      ),
+    ); 
   }
 }

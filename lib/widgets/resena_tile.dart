@@ -24,7 +24,7 @@ class ResenaTile extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 14,
-                  backgroundColor: Colors.deepOrange,
+                  backgroundColor: const Color.fromARGB(255, 142, 0, 203),
                   child: Text(
                     resena.autor[0].toUpperCase(),
                     style: const TextStyle(color: Colors.white, fontSize: 12),
@@ -41,7 +41,7 @@ class ResenaTile extends StatelessWidget {
                 ), // Expanded
                 Text(
                   fecha,
-                  style: TextStyle(fontSize: 11.5, color: Colors.grey.shade600),
+                  style: TextStyle(fontSize: 11.5, color: const Color.fromARGB(255, 82, 0, 158)),
                 ), // Text
               ],
             ), // Row

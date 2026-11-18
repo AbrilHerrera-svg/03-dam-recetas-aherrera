@@ -106,7 +106,7 @@ class _DetalleRecetaScreenState extends State<DetalleRecetaScreen> {
                 icon: const Icon(Icons.send),
                 label: const Text("Publicar reseña"),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.deepOrange,
+                  backgroundColor: const Color.fromARGB(255, 109, 10, 175),
                   foregroundColor: Colors.white,
                 ),
               ),
